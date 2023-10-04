@@ -1,0 +1,50 @@
+body {
+  max-width: 600px;
+  width: 90vw;
+  margin: auto;
+  font-size: 24px;
+  color: #333333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: sans-serif;
+  color: black;
+}
+
+b {
+  color: black;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: 900;
+  margin-top: 63px;
+  margin-bottom: 30px;
+}
+
+#unread {
+  color: gray;
+  font-size: 16px;
+}
+
+.welcome {
+  margin-bottom: 0;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eeeeee;
+}
+
+.top-margin {
+  margin-top: 40px;
+}
