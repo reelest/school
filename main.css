@@ -17,12 +17,21 @@ th:hover {
   cursor: pointer;
 }
 
+/* Forms */
 label {
-  color: red;
+  font-size: smaller;
+  display: block;
 }
 
-/* <selector>  */
-body {
-  /* <property> : <value> ; */
-  background-color: blue;
+input {
+  border: none;
+  border: 1px solid grey;
+  border-radius: 4px;
+  line-height: 1rem;
+  padding: 0.25rem 0.5rem;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid lightblue;
 }
