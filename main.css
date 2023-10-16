@@ -1,0 +1,28 @@
+td,
+th {
+  padding: 0.5rem;
+  border: 1px solid brown;
+  text-align: center;
+}
+
+table {
+  width: 90vw;
+  border-collapse: collapse;
+}
+
+td:hover,
+th:hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+label {
+  color: red;
+}
+
+/* <selector>  */
+body {
+  /* <property> : <value> ; */
+  background-color: blue;
+}
