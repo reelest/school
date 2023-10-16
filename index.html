@@ -45,22 +45,26 @@
   <form>
     <p>
       <label>Enter your name</label>
-      <input type="text" name="name">
+      <input type="text" name="name" required pattern="\w+ \w+">
     </p>
     <p>
       <label>How many bowls of garri do you want?</label>
-      <input type="number" name="bowls">
+      <input type="number" name="bowls" required min="0" max="5" step="0.1">
     </p>
     <p>
       <label>White garri</label>
-      <input type="checkbox" name="use_white"><span>Buy white instead of yellow?</span>
+      <input type="checkbox" name="use_white" required><span>Buy white instead of yellow?</span>
     </p>
     <p>
       <label>When do you need it?</label>
-      <input type="datetime-local" name="time">
+      <input type="datetime-local" name="time" required>
     </p>
     <button>submit</button>
   </form>
+
+  <h2>Images</h2>
+
+  <img src="./images/1.jpg">
 </body>
 
 </html>
