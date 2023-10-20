@@ -1,0 +1,66 @@
+td,
+th {
+  padding: 0.5rem;
+  border: 1px solid brown;
+  text-align: center;
+}
+
+table {
+  width: 90vw;
+  border-collapse: collapse;
+}
+
+td:hover,
+th:hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+/* Forms */
+label {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 0.5em;
+  display: block;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid grey;
+  line-height: 1rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #bbbbbb;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid lightblue;
+}
+
+.image {
+  width: 600px;
+  height: 600px;
+  object-fit: cover;
+  object-position: 0 50%;
+  border-radius: 50%;
+}
+
+#panel {
+  background-image: url("./images/1.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  padding: 1px;
+}
+
+#child {
+  background-color: white;
+  width: 50vw;
+  padding: 1em;
+  margin: 10vh auto;
+  border-radius: 8px;
+}
