@@ -1,0 +1,24 @@
+{
+  "name": "talebearer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/index.js --bundle --outfile=talebearer.min.js --inject:./src/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --analyze",
+    "dev": "esbuild src/index.js --bundle --outfile=talebearer.min.js --inject:./src/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --sourcemap=both --servedir=.."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mime-types": "^2.1.35",
+    "mithril": "^2.2.2",
+    "path-browserify": "^1.0.1",
+    "sharedb": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.3",
+    "@types/mithril": "^2.2.3",
+    "esbuild": "0.19.5"
+  }
+}
