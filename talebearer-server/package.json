@@ -10,5 +10,11 @@
   "scripts": {
     "start": "wrangler dev",
     "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "diffsync": "^2.1.2",
+    "engine.io": "^6.5.3",
+    "itty-router": "^4.0.23",
+    "socket.io": "^4.7.2"
   }
 }
