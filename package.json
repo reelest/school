@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "json-cyclic": "^1.0.2"
+  }
+}
