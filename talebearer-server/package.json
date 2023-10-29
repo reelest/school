@@ -12,9 +12,11 @@
     "deploy": "wrangler publish"
   },
   "dependencies": {
+    "@liveblocks/node": "^1.5.2",
     "diffsync": "^2.1.2",
     "engine.io": "^6.5.3",
     "itty-router": "^4.0.23",
+    "sharedb": "^4.1.1",
     "socket.io": "^4.7.2"
   }
 }
