@@ -15,12 +15,16 @@
     "@liveblocks/node": "^1.5.2",
     "@types/events": "^3.0.2",
     "ably": "^1.2.46",
+    "@teamwork/websocket-json-stream": "^2.0.0",
     "diffsync": "^2.1.2",
     "engine.io": "^6.5.3",
     "events": "^3.3.0",
     "itty-router": "^4.0.23",
     "serverless-http": "^3.2.0",
+    "process": "^0.11.10",
     "sharedb": "^4.1.1",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "stream": "npm:readable-stream@^4.4.2",
+    "util": "^0.12.5"
   }
 }

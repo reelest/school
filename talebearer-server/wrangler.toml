@@ -2,8 +2,6 @@ name = "talebearer"
 main = "src/index.ts"
 compatibility_date = "2023-10-28"
 [[ d1_databases ]]
-binding = "DB" # i.e. available in your Worker on
-env.DB
+binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "talebearer"
-database_id =
-"3d04bebc-39ff-497a-bdbf-1c47ca8ce1d6"
+database_id = "3d04bebc-39ff-497a-bdbf-1c47ca8ce1d6"
