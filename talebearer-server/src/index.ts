@@ -1,64 +1,17 @@
-<<<<<<< HEAD
-import engine from "engine.io";
-import { Server } from "socket.io";
-import { Engine } from "engine.io";
-var io = new Server();
-io.at;
-=======
-import { parseDataBody } from 'ably'
->>>>>>> 5431de0 (feat: start)
 
-// setting up diffsync's DataAdapter
-var diffsync = require("diffsync");
-var dataAdapter = new diffsync.InMemoryDataAdapter();
-
-// setting up the diffsync server
-var diffSyncServer = new diffsync.Server(dataAdapter, io);
-const server = new engine.Server();
-
-server.on("connection", (socket) => {
-  socket.send("hi");
-});
-<F8><F11>
-<F4// …
-httpServer.on("upgrade", (req, socket, head) =1q> {
-  server.handleUpgrade(req, socket, head);
-});
-
-httpServer.on("request", (req, res) => {
-  server.handleRequest(req, res);
-});
-async function handleRequest(request) {
-  const upgradeHeader = request.headers.get("Upgrade");
-  if (!upgradeHeader || upgradeHeader !== "websocket") {
-    return new Response("Expected Upgrade: websocket", { status: 426 });
-  }
-
-  const webSocketPair = new WebSocketPair();
-  const [client, server] = Object.values(webSocketPair);
-
-  server.accept();
-  server.addEventListener("message", (event) => {
-    console.log(event.data);
-  });
-
-  return new Response(null, {
-    status: 101,
-    webSocket: client,
-  });
+export interface Env {
+  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
+  // MY_KV_NAMESPACE: KVNamespace;
+  //
+  // Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
+  // MY_DURABLE_OBJECT: DurableObjectNamespace;
+  //
+  // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
+  // MY_BUCKET: R2Bucket;
+  //
+  // Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
+  // MY_SERVICE: Fetcher;
 }
-<<<<<<< HEAD
-export default {
-  async fetch(
-    request: Request,
-    env: any,
-    ctx: ExecutionContext
-  ): Promise<Response> {
-    return io.se;
-  },
-=======
-
-const key = 'YOUR_API_KEY_HERE';
 
 async function handleRequest(request) {
     try {

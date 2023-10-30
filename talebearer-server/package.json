@@ -13,9 +13,13 @@
   },
   "dependencies": {
     "@liveblocks/node": "^1.5.2",
+    "@types/events": "^3.0.2",
+    "ably": "^1.2.46",
     "diffsync": "^2.1.2",
     "engine.io": "^6.5.3",
+    "events": "^3.3.0",
     "itty-router": "^4.0.23",
+    "serverless-http": "^3.2.0",
     "sharedb": "^4.1.1",
     "socket.io": "^4.7.2"
   }
