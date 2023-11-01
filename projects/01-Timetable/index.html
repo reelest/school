@@ -1,78 +1,39 @@
-<!DOCTYPE html>
-<html>
+<h1>Home page</h1>
+<a href="./page2.html">Go to Page 2</a>
+<a href="https://www.google.com">Go to Google</a>
+<a href="https://www.facebook.com">Go to Facebook</a>
+<br />
+<br />
+<br />
 
-<head>
-  <title>Time Table</title>
-  <link href="./main.css" rel="stylesheet">
-</head>
+<table>
+  <tbody>
+    <tr>
+      <td>Maths</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>English</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Biology</td>
+      <td>7</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
 
-<body>
-  <h1>Hello Tables, Forms And Images</h1>
-  <h2>Tables</h2>
+<form>
+  <label>Enter your email:</label>
+  <input type="email">
+  <br />
+  <label>Enter your password:</label>
+  <input type="password">
+  <br />
+  <input type="submit" value="Log In">
+</form>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Cost Price</th>
-        <th>Selling Price</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>Tomato</td>
-        <td colspan="2">70</td>
-      </tr>
-      <tr>
-        <td>Original Tomato Paste</td>
-        <td>56</td>
-        <td>100</td>
-      </tr>
-      <tr>
-        <td>White Garri</td>
-        <td rowspan="2">50</td>
-        <td>70</td>
-      </tr>
-      <tr>
-        <td>Yellow Garri</td>
-        <td>100</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>Forms</h2>
-  <form>
-    <p>
-      <label>Enter your name</label>
-      <input type="text" name="name" required pattern="\w+ \w+">
-    </p>
-    <p>
-      <label>How many bowls of garri do you want?</label>
-      <input type="number" name="bowls" required min="0" max="5" step="0.1">
-    </p>
-    <p>
-      <label>White garri</label>
-      <input type="checkbox" name="use_white" required><span>Buy white instead of yellow?</span>
-    </p>
-    <p>
-      <label>When do you need it?</label>
-      <input type="datetime-local" name="time" required>
-    </p>
-    <button>submit</button>
-  </form>
-
-  <h2>Images</h2>
-
-  <img src="./images/1.jpg" class="image"><b>Hello</b>
-  <div id="panel">
-    <div id="child">
-      <ul>
-        <li>Sugar</li>
-        <li>Milk</li>
-      </ul>
-    </div>
-  </div>
-</body>
-
-</html>
+<img src="./image.png">

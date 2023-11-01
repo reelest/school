@@ -1,6 +1,9 @@
-import { readFile } from "./discover";
+import { readFile, loadFileSystem } from "./discover";
 import { resolveFile } from "./filesystem";
-import "./sync";
 
-readFile(".", "text/html").then((e) => console.log(resolveFile("/")));
-
+loadFileSystem();
+readFile(".", "text/html").then(() => {
+  resolveFile("/");
+  const latestVersion = await readLatestVersion();
+  if(latestVersion === e.) z 1  
+});
