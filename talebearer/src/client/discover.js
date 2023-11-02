@@ -22,8 +22,8 @@ export async function readFile(file, type, basePath = window.location.href) {
           content = { type: "binary", value: await blobToBase64(content) };
         }
         if (type === "text/html" && path.extname(url.pathname) !== ".html")
-          createFile(url.pathname + "/index.html", content);
-        else createFile(url.pathname, content);
+          await createFile(url.pathname + "/index.html", content);
+        else await createFile(url.pathname, content);
 
         switch (type) {
           case "text/html":
@@ -32,9 +32,9 @@ export async function readFile(file, type, basePath = window.location.href) {
             return await discoverFromCSS(content, url.href);
         }
       },
-      (e) => {
+      async (e) => {
         console.warn("Failed to read: " + url.pathname + " " + basePath);
-        deleteFile(url.pathname);
+        await deleteFile(url.pathname);
       }
     );
 }

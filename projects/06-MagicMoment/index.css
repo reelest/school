@@ -1,0 +1,36 @@
+body {
+  background-color: #1d1f20;
+  color: white;
+  padding: 1em 4em;
+}
+
+.sandra {
+  border-radius: 1em;
+  background-color: transparent;
+  border: 1px solid grey;
+  padding: 0.5em 1em;
+  color: white;
+  width: 80%;
+  outline: none;
+}
+
+.festus {
+  background-color: transparent;
+  margin-left: 1em;
+  color: white;
+  border: 1px solid grey;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+}
+
+.pop:hover {
+  color: green;
+}
+
+#amaka {
+  color: purple;
+}
+
+#amaka:hover {
+  color: yellow;
+}

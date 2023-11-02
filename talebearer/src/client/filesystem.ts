@@ -1,7 +1,7 @@
 import path from "path";
 const filesystem: IDirectory = {
   parent: null,
-  version: 0,
+  version: "",
   name: "",
   children: [],
 };
@@ -10,13 +10,13 @@ export const getFileSystem = () => {
   return filesystem;
 };
 
-export const setFileSystem = (e) => {
+export const setFileSystem = (e: IDirectory) => {
   Object.assign(filesystem, e);
 };
 
 interface IDirectory {
   name: string;
-  version: number;
+  version: string;
   parent: IDirectory | null;
   children: Array<IDirectory | IFile>;
 }
@@ -24,11 +24,11 @@ interface IFile {
   content: string;
   name: string;
   type: "text" | "binary";
-  version: number;
+  version: string;
   parent: IDirectory;
 }
 
-export function createFile(
+export async function createFile(
   filepath: string,
   content: string | { type: IFile["type"]; value: IFile["content"] }
 ) {
@@ -38,10 +38,8 @@ export function createFile(
   const dirname = path.dirname(filepath);
   const segments = dirname.split(path.sep).filter(Boolean);
   let parent = filesystem;
-  filesystem.version++;
   for (let segment of segments) {
     parent = addDirectoryNode(parent, segment);
-    parent.version = filesystem.version;
   }
   const k = addFileNode(parent, filename);
   let type: IFile["type"] = "text";
@@ -51,8 +49,27 @@ export function createFile(
   }
   k.content = content;
   k.type = type;
-  k.version = filesystem.version;
+  await updateVersions(k);
   notifyFSChange();
+}
+
+async function updateVersions(k: IDirectory | IFile) {
+  if ("content" in k) {
+    k.version = await digest(k.content);
+  } else {
+    k.version = await digest(k.children.map((e) => e.version).join("\n"));
+  }
+  if (k.parent) {
+    await updateVersions(k.parent);
+  }
+}
+async function digest(message: string, algo = "SHA-1") {
+  return Array.from(
+    new Uint8Array(
+      await crypto.subtle.digest(algo, new TextEncoder().encode(message))
+    ),
+    (byte) => byte.toString(16).padStart(2, "0")
+  ).join("");
 }
 
 export function resolveFile(filepath: string) {
@@ -60,7 +77,7 @@ export function resolveFile(filepath: string) {
   const dirname = path.dirname(filepath);
   const segments = dirname.split(path.sep).filter(Boolean);
   let parent = filesystem;
-  for (let segment in segments) {
+  for (let segment of segments) {
     parent = parent.children.find(
       (e) => e.name === segment && "children" in e
     ) as IDirectory;
@@ -70,15 +87,14 @@ export function resolveFile(filepath: string) {
   else return parent;
 }
 
-export function deleteFile(filepath: string) {
+export async function deleteFile(filepath: string) {
   const x = resolveFile(filepath);
   if (x) {
     x.parent!.children.splice(x.parent!.children.indexOf(x), 1);
-    filesystem.version++;
     let parent = x.parent;
+    await updateVersions(parent!);
     x.parent = null;
     while (parent) {
-      parent.version = filesystem.version;
       parent = parent.parent;
     }
   }
@@ -95,7 +111,7 @@ function addDirectoryNode(parent: IDirectory, name: string) {
       children: [],
       name: name,
       parent: parent,
-      version: 0,
+      version: "",
     };
     parent.children.push(m);
     return m as IDirectory;
@@ -113,7 +129,7 @@ function addFileNode(parent: IDirectory, name: string) {
       name: name,
       parent: parent,
       type: "text",
-      version: 0,
+      version: "",
     };
     parent.children.push(m);
     return m as IFile;

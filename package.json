@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "rxdb": "^14.17.1"
+    "@ungap/structured-clone": "^1.2.0",
+    "rxdb": "^14.17.1",
+    "swagger-route-validator": "^2.0.1"
   }
 }
