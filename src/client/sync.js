@@ -1,6 +1,6 @@
 import { fetcher } from "itty-fetcher";
 const api = fetcher({
-  base: "http://localhost:8787" || "https://talebearer.reelest.workers.dev",
+  base: "/api",
 });
 
 export default async function sync(bucket, fs) {

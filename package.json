@@ -1,7 +1,47 @@
 {
+  "name": "talebearer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cp index.html dist/ && cp -r projects/ dist/ && esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"production\\\" --bundle --outfile=dist/talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --analyze",
+    "dev": "esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --sourcemap=both --servedir=.",
+    "dev:server": "netlify dev",
+    "migrate:prepare": "drizzle-kit generate:sqlite --schema=src/server/model/*.ts --out=./migrations",
+    "migrate:cloud": "wrangler d1 migrations apply talebearer",
+    "migrate:local": "wrangler d1 migrations apply talebearer --local"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "@libsql/client": "^0.3.6",
+    "@netlify/functions": "^2.3.0",
     "@ungap/structured-clone": "^1.2.0",
+    "diffsync": "^2.1.2",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.28.6",
+    "events": "^3.3.0",
+    "firebase": "^10.5.2",
+    "itty-fetcher": "^0.9.4",
+    "itty-router": "^4.0.23",
+    "mime-types": "^2.1.35",
+    "mithril": "^2.2.2",
+    "openapi-request-validator": "^12.1.3",
+    "path": "npm:path-browserify@^1.0.1",
     "rxdb": "^14.17.1",
-    "swagger-route-validator": "^2.0.1"
+    "swagger-route-validator": "^2.0.1",
+    "toastify-js": "^1.12.0"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.3",
+    "@types/mithril": "^2.2.3",
+    "@types/path-browserify": "^1.0.1",
+    "better-sqlite3": "^8.0.1",
+    "drizzle-kit": "^0.19.13",
+    "esbuild": "0.19.5",
+    "netlify-cli": "^17.0.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   }
 }
