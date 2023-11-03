@@ -1,0 +1,99 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "id": "2c3e6dfe-7533-4b1f-961f-16965fa69a2c",
+  "prevId": "b2e94f11-35d4-477e-928a-d49433959a62",
+  "tables": {
+    "buckets": {
+      "name": "buckets",
+      "columns": {
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "bucket": {
+          "name": "bucket",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sha": {
+          "name": "sha",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "uploadTime": {
+          "name": "uploadTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(date())"
+        }
+      },
+      "indexes": {
+        "bucketIdx": {
+          "name": "bucketIdx",
+          "columns": [
+            "bucket",
+            "uploadTime"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "objects": {
+      "name": "objects",
+      "columns": {
+        "sha": {
+          "name": "sha",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content": {
+          "name": "content",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "objects_sha_unique": {
+          "name": "objects_sha_unique",
+          "columns": [
+            "sha"
+          ],
+          "isUnique": true
+        },
+        "sha": {
+          "name": "sha",
+          "columns": [
+            "sha"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
