@@ -9,8 +9,7 @@
     "dev": "esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --sourcemap=both --servedir=.",
     "dev:server": "netlify dev",
     "migrate:prepare": "drizzle-kit generate:sqlite --schema=src/server/model/*.ts --out=./migrations",
-    "migrate:cloud": "wrangler d1 migrations apply talebearer",
-    "migrate:local": "wrangler d1 migrations apply talebearer --local"
+    "migrate:cloud": "node src/server/migrate.mjs"
   },
   "author": "",
   "license": "ISC",

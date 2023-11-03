@@ -9,5 +9,6 @@ command = "npm run build"
   port = 8888
   targetPort = 8000
   publish = "dist"
+  envFiles = [".env"]
 
 

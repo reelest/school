@@ -4,7 +4,7 @@ import { IRequest, Router, error } from "itty-router";
 
 export type ValidRoute = Array<keyof (typeof spec)["paths"]>;
 
-const app = Router();
+const app = Router({ base: "/api" });
 (Object.keys(spec.paths) as ValidRoute).forEach((path) => {
   app.all(path.replace(/\{([^{}]+)\}/g, ":$1"), function (req: IRequest) {
     const method = req.method.toLowerCase() as "get" | "post" | "put" | "patch";
