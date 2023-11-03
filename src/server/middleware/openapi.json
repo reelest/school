@@ -29,7 +29,6 @@
         "tags": ["sync"],
         "summary": "Get the current server version of a project",
         "description": "Get the current server version which is the version of the last update.",
-        "operationId": "getServerVersion",
         "parameters": [
           {
             "in": "path",
@@ -83,7 +82,7 @@
         ]
       }
     },
-    "/upload/{bundleId}": {
+    "/bundle/{bundleId}": {
       "post": {
         "tags": ["sync"],
         "summary": "Upload bundle",
@@ -97,9 +96,47 @@
             "required": true
           }
         ],
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
         "responses": {
           "default": {
-            "description": "Successfule",
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/objects/{objectId}": {
+      "get": {
+        "tags": ["sync"],
+        "summary": "Get Object",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "objectId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Successful",
             "content": {
               "application/json": {
                 "schema": {

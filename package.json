@@ -30,7 +30,8 @@
     "path": "npm:path-browserify@^1.0.1",
     "rxdb": "^14.17.1",
     "swagger-route-validator": "^2.0.1",
-    "toastify-js": "^1.12.0"
+    "toastify-js": "^1.12.0",
+    "yaml-to-json": "^0.3.0"
   },
   "devDependencies": {
     "@types/mime-types": "^2.1.3",

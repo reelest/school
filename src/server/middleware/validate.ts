@@ -5,15 +5,15 @@ import { IRequest, Router, error } from "itty-router";
 const OpenAPIRequestValidator =
   "default" in openAPI ? (openAPI.default as typeof openAPI) : openAPI;
 
-export type ValidRoute = Array<keyof (typeof spec)["paths"]>;
+export type ValidRoute = keyof (typeof spec)["paths"];
 
+export const toRoute = (path: ValidRoute) => {
+  return path.replace(/\{([^{}]+)\}/g, ":$1");
+};
 const app = Router({ base: "/api" });
-(Object.keys(spec.paths) as ValidRoute).forEach((path) => {
-  app.all(path.replace(/\{([^{}]+)\}/g, ":$1"), function (req: IRequest) {
-    const method = req.method.toLowerCase() as "get" | "post" | "put" | "patch";
-    if (method in spec.paths[path]) {
-      req.foundRoute = spec.paths[path];
-    }
+(Object.keys(spec.paths) as ValidRoute[]).forEach((path) => {
+  app.all(toRoute(path), function (req: IRequest) {
+    req.foundRoute = spec.paths[path];
   });
 });
 export default function withValidation(req: IRequest) {
@@ -21,11 +21,12 @@ export default function withValidation(req: IRequest) {
   if (!req.foundRoute) {
     return error(401, "No public route at " + req.url);
   }
-  const method = req.method.toLowerCase();
+  const method = req.method.toLowerCase() as "get" | "post" | "put" | "patch";
   if (!(method in req.foundRoute)) {
     return error(401, "Unsupported method " + method.toLocaleUpperCase());
   }
   const x = new OpenAPIRequestValidator(req.foundRoute[method]);
+  console.log({ d: req.foundRoute[method].parameters });
   const err = x.validateRequest(req);
   if (err) {
     return error(401, err);

@@ -13,5 +13,5 @@ let stmt = lateInit(() =>
     .prepare()
 );
 export function getVersion(req: IRequest) {
-  return stmt().all({ bucket: "" + req.params.bucketId });
+  return stmt().all({ bucket: "" + req.params.bundleId });
 }

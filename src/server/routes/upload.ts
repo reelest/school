@@ -2,7 +2,11 @@ import { IRequest, status } from "itty-router";
 import { getDB, lateInit } from "../middleware/db";
 import { sql } from "drizzle-orm";
 import { buckets, objects } from "../model/buckets";
-import { deserialize, serialize } from "@ungap/structured-clone";
+import {
+  SerializedRecord,
+  deserialize,
+  serialize,
+} from "@ungap/structured-clone";
 import { Env } from "..";
 
 let stmt = lateInit(() =>
@@ -11,9 +15,14 @@ let stmt = lateInit(() =>
     .values({ bucket: sql.placeholder("bucket"), sha: sql.placeholder("sha") })
 );
 export default async function uploadBundle(req: IRequest, env: Env) {
-  const content = deserialize(await req.json());
-  const bucket = req.params.bucketId;
-  console.log({ bucket, content });
+  let raw: SerializedRecord = await req.json(),
+    content: any = raw;
+  if (Array.isArray(content)) {
+    content = deserialize(raw);
+  } else {
+    raw = serialize(content);
+  }
+  const bucket = req.params.bundleId;
   await getDB().transaction(async (tx) => {
     await tx.insert(buckets).values({
       bucket: bucket,
@@ -23,7 +32,7 @@ export default async function uploadBundle(req: IRequest, env: Env) {
       .insert(objects)
       .values({
         sha: content.version,
-        value: serialize(content),
+        value: raw,
       })
       .onConflictDoNothing();
   });
