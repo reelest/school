@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cp index.html dist/ && cp -r projects/ dist/ && esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"production\\\" --bundle --outfile=dist/talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --analyze",
+    "build": "mkdir dist && cp index.html dist/ && cp -r projects/ dist/ && esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"production\\\" --bundle --outfile=dist/talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --analyze",
     "dev": "esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --sourcemap=both --servedir=.",
     "dev:server": "netlify dev",
     "migrate:prepare": "drizzle-kit generate:sqlite --schema=src/server/model/*.ts --out=./migrations",
