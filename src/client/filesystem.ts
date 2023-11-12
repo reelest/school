@@ -1,4 +1,5 @@
-import path from "path";
+import { posix as path } from "path";
+import { IFile, type IDirectory } from "../common/vcs";
 const filesystem: IDirectory = {
   parent: null,
   version: "",
@@ -13,20 +14,6 @@ export const getFileSystem = () => {
 export const setFileSystem = (e: IDirectory) => {
   Object.assign(filesystem, e);
 };
-
-interface IDirectory {
-  name: string;
-  version: string;
-  parent: IDirectory | null;
-  children: Array<IDirectory | IFile>;
-}
-interface IFile {
-  content: string;
-  name: string;
-  type: "text" | "binary";
-  version: string;
-  parent: IDirectory;
-}
 
 export async function createFile(
   filepath: string,
