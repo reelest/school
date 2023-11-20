@@ -39,17 +39,32 @@ test.only("packRecords", async function () {
   expect(packRecords(unpackRecords(z))).toEqual(z);
   expect(unserialize(unpackRecords(z))).toEqual(unserialize(m));
 
+  // Add one file
   await createFile("/main.ts", "Hello");
-  const p = packRecords(serialize(getFileSystem()), m);
-  expect(p.a.length).toEqual(0);
+  const x = serialize(getFileSystem());
+  const p = packRecords(x, m);
+  expect(p.a.length).toEqual(1);
 
-  await createFile("/main.ts", "Hello9");
-  const q = packRecords(serialize(getFileSystem()), m);
+  // Add one file and delete one file
+  await createFile("/main5.ts", "Hello");
+  await deleteFile("/main.ts");
+  const n = serialize(getFileSystem());
+  const s = packRecords(n, x);
+  expect(s.a.length).toEqual(1);
+
+  expect(unpackRecords(s, x)).toEqual({ files: n.files, root: n.root });
+
+  // Modify one file
+  await createFile("/main5.ts", "Hello9");
+  const b = serialize(getFileSystem());
+  const q = packRecords(b, n);
+  expect(unpackRecords(q, n)).toEqual({ files: b.files, root: b.root });
+  console.log(q);
   expect(q.a.length).toEqual(1);
 
+  // Remove both files
   await deleteFile("/main.ts");
+  await deleteFile("/main5.ts");
   const r = packRecords(serialize(getFileSystem()), m);
   expect(r.a.length).toEqual(0);
-
-  console.log(p, q, r);
 });

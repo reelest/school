@@ -4,3 +4,4 @@ node_modules
 .netlify
 dist
 .env
+.dev.vars

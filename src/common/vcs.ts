@@ -17,7 +17,7 @@ export interface IFile {
 
 type IFileStack = Array<IFileStack | string>;
 
-type SerializedRecord = {
+export type SerializedRecord = {
   files: Record<string, Omit<IFile, "parent"> & { parent?: IDirectory }>;
   root: IFileStack;
 };
@@ -77,15 +77,18 @@ export function serialize(fs: IDirectory): SerializedRecordWithPaths {
       fs!.version,
       ...(walk(function (path, [e], enter) {
         if (e && "content" in e) {
-          files[e.version] = {
+          let s = e.version;
+          let i = 0;
+          while (files[s]) s = ++i + "." + e.version;
+          files[s] = {
             content: e.content,
             name: e.name,
             type: e.type,
             version: e.version,
           };
           paths[path] = e.version;
-          paths[e.version] = path;
-          return e.version;
+          paths[s] = path;
+          return s;
         } else {
           return [e!.name, e!.version, ...enter()];
         }
@@ -100,8 +103,7 @@ export function unserialize(data: SerializedRecord) {
   function _unserialize(x: IFileStack | string, parent: IDirectory | null) {
     if (typeof x === "string") {
       let v = keys.find((e) => x.startsWith(e)) as string;
-      files[v].parent = parent as IDirectory;
-      return files[v] as IFile;
+      return { ...files[v], parent } as IFile;
     } else {
       const [name, version, ...files] = x;
       const node = {
@@ -129,8 +131,10 @@ dmp.Match_Threshold =
   dmp.Patch_DeleteThreshold =
   dmp.Patch_Margin =
     0;
+const RENAME_COST = 10;
 function isRenameCandidate(content1: string, content2: string) {
   return (
+    content2.length > RENAME_COST &&
     Math.min(content1.length, content2.length) /
       Math.max(content1.length, content2.length) >
       0.6 &&
@@ -143,6 +147,7 @@ function isRenameCandidate(content1: string, content2: string) {
 // A more space efficient diff storage
 function diff_main_toDelta(a: string, b: string) {
   const diffs = dmp.diff_main(a, b);
+  dmp.diff_cleanupEfficiency(diffs);
   let sep;
   for (let i = 65; i < 255; i++) {
     let p = String.fromCharCode(i);
@@ -186,40 +191,71 @@ function diff_fromDelta(text1: string, delta: string) {
   }
 }
 
+const compressKeys = function (
+  shortNames: Record<string, string>,
+  c: string,
+  i: number,
+  a: string[]
+) {
+  let p = 0,
+    t = c.slice(0, ++p);
+  while (a[i + 1] && a[i + 1].startsWith(t) && p < c.length) {
+    t = c.slice(0, ++p);
+  }
+  while (a[i - 1] && a[i - 1].startsWith(t) && p < c.length) {
+    t = c.slice(0, ++p);
+  }
+  shortNames[c] = t;
+  return shortNames;
+};
+
+//TODO store files by path
+const BINARY = 0;
+const TEXT = 1;
 const EMPTY = { files: {}, root: [], [pathProp]: {} };
 export function packRecords(
   _new: SerializedRecordWithPaths,
   _old: SerializedRecordWithPaths = EMPTY
 ) {
   let __versionsOld = Object.keys(_old.files);
-  let _versionsNew = Object.keys(_new.files);
+  const oldShortNames = __versionsOld.sort().reduce(compressKeys, {});
 
-  const x = __versionsOld
-    .concat(_versionsNew)
-    .sort()
-    .reduce(function (f, c, i, a) {
-      let p = 0,
-        t = c.slice(0, ++p);
-      while (a[i + 1] && a[i + 1].startsWith(t) && p < c.length) {
-        t = c.slice(0, ++p);
-      }
-      while (a[i - 1] && a[i - 1].startsWith(t) && p < c.length) {
-        t = c.slice(0, ++p);
-      }
-      f[c] = t;
-      return f;
-    }, {} as Record<string, string>);
+  let _versionsNew = Object.keys(_new.files);
+  const newShortNames = _versionsNew.sort().reduce(compressKeys, {});
+
+  // Removed Files
   let _versionsOld = __versionsOld
-    .filter((e) => !_versionsNew.includes(e))
+    .filter((e) => {
+      return (
+        _versionsNew.findIndex(
+          (f) =>
+            _old.files[e].version === _new.files[f].version &&
+            _old[pathProp][e] === _new[pathProp][f]
+        ) === -1
+      );
+    })
     .sort();
-  _versionsNew = _versionsNew.filter((e) => !__versionsOld.includes(e)).sort();
+
+  // Added files
+  _versionsNew = _versionsNew
+    .filter((f) => {
+      return (
+        __versionsOld.findIndex(
+          (e) =>
+            _old.files[e].version === _new.files[f].version &&
+            _old[pathProp][e] === _new[pathProp][f]
+        ) === -1
+      );
+    })
+    .sort();
 
   let versionsOld: (string | undefined)[] = [];
   let versionsNew: string[] = [];
 
   //Track file changes by file path
   for (let version of _versionsOld) {
-    let mappedVersion = _new[pathProp][_old[pathProp][version]];
+    let mappedVersion =
+      _new[pathProp][_old[pathProp][version] /* old filepath */];
     if (mappedVersion) {
       versionsOld.push(version);
       versionsNew.push(mappedVersion);
@@ -245,14 +281,17 @@ export function packRecords(
   return {
     a: versionsNew.map((e, i) => [
       _new.files[e].name,
-      _new.files[e].type[0],
-      x[e],
+      _new.files[e].type === "text" ? TEXT : BINARY,
+      newShortNames[e],
       versionsOld[i] !== undefined ? 0 : _new.files[e].content,
 
       versionsOld[i] !== undefined
-        ? diff_main_toDelta(versionsOld[i] as string, e)
+        ? diff_main_toDelta(
+            _old.files[versionsOld[i] as string].content,
+            _new.files[e].content
+          )
         : 0,
-      versionsOld[i] ?? 0,
+      versionsOld[i] ? oldShortNames[versionsOld[i] as string] : 0,
     ]),
     d: diff_main_toDelta(JSON.stringify(_old.root), JSON.stringify(_new.root)),
     b: _old.root[1],
@@ -271,37 +310,44 @@ export function unpackRecords(
       dmp.diff_text2(diff_fromDelta(JSON.stringify(_old.root), diff.d))
     ),
   };
-  const o: Record<string, number> = {};
-  const keys = diff.a.map((e) => e[v] as string);
-  function _findKeys(x: IFileStack | string) {
+  const newKeys: Record<string, number> = {};
+  function _findKeys(o: any, p: string[], x: IFileStack | string) {
     if (typeof x === "string") {
-      let v = keys.findIndex((e) => x.startsWith(e));
+      let v = p.findIndex((e) => x.startsWith(e));
       o[x] = v;
     } else {
-      x.slice(2).forEach((e) => _findKeys(e));
+      x.slice(2).forEach((e) => _findKeys(o, p, e));
     }
   }
-  _findKeys(m.root);
+  _findKeys(
+    newKeys,
+    diff.a.map((e) => e[v] as string),
+    m.root
+  );
+  let __versionsOld = Object.keys(_old.files);
+  const oldShortNames = __versionsOld.sort().reduce(compressKeys, {});
+  for (let i in oldShortNames) {
+    oldShortNames[oldShortNames[i]] = i;
+  }
 
-  for (let version in o) {
-    let i = diff.a[o[version]];
+  for (let version in newKeys) {
+    let i = diff.a[newKeys[version]];
     m.files[version] =
-      o[version] < 0
+      newKeys[version] < 0
         ? _old.files[version]
         : {
             content:
               i[co] === 0
                 ? dmp.diff_text2(
                     diff_fromDelta(
-                      _old.files[i[b] as string].content,
+                      _old.files[oldShortNames[i[b] as string]].content,
                       i[d] as string
                     )
                   )
                 : (i[co] as string),
             name: i[n] as string,
-            type: i[t] === "b" ? "binary" : "text",
-            version: version,
-            parent: null as any,
+            type: i[t] === BINARY ? "binary" : "text",
+            version: version.replace(/^\d+\./, ""),
           };
   }
 

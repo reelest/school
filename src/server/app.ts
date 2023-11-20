@@ -1,11 +1,12 @@
 import { Router, IRequest, error } from "itty-router";
-import { Env } from ".";
+import { Env } from "./cloudflare";
 import { corsify, preflight } from "./middleware/cors";
 import withDB from "./middleware/db";
-import { getVersion } from "./routes/version";
+import getVersion from "./routes/getVersion";
 import { njson } from "./itty-netlify";
-import uploadBundle from "./routes/upload";
-import getBundle from "./routes/get";
+import uploadBundle from "./routes/uploadBundle";
+import getBundle from "./routes/getBundle";
+import _listBundle from "./routes/listBundle";
 
 type Args = [env: Env];
 const app = Router<IRequest, Args>({ base: "/api/" });
@@ -20,13 +21,11 @@ const app = Router<IRequest, Args>({ base: "/api/" });
  * - User 2 downloads bucket with specified version. /objects/:bundleId -> IDirectory
  *
  * Sync Level 2
- * - User 1 requests current version from server. GET /bundle/:bundleId
- * - If user1 has the bundle, a diff is performed.
+ * - User 1 has a lastSavedServerVersion called :fromId which is guaranteed to be on the server.
  * - User 1 sends patch to server. PUT /patch/:fromId/:bundleId -> bundleId
- * - User 2 requests patches from his local version which is the last server version he saw. GET /patch/:fromId/:bundleId -> bundleId
- * - If the server has the version, it sends a patch. Otherwise it sends a full stream.
- * -
- * -
+ * - User 2 also has a lastSavedServerVersion.
+ * - User 2 requests patches from his lastSavedServerVersion. GET /patch/:fromId/:bundleId -> bundleId
+ * - If the server has the version, it sends a patch. Otherwise it sends a full filesystem.
  */
 
 const logger = (req: IRequest) => {
@@ -34,9 +33,10 @@ const logger = (req: IRequest) => {
 };
 app
   .all<IRequest, Args>("*", preflight, withDB)
+  .get("/bundle/", logger, _listBundle)
   .get("/bundle/:bundleId", logger, getVersion)
   .put<IRequest, Args>("/bundle/:bundleId", logger, uploadBundle)
-  .get<IRequest, Args>("/objects/:objectId", logger, getBundle)
+  .get<IRequest, Args>("/objects/:bundleId", logger, getBundle)
   .all("*", logger, () => error(401, "Unimplemented API"));
 
 export default async function handleRequest(request: IRequest, env: Env) {

@@ -7,9 +7,11 @@
     "test": "vitest",
     "build": "mkdir dist && cp index.html dist/ && cp -r projects/ dist/ && esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"production\\\" --bundle --outfile=dist/talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --analyze",
     "dev": "esbuild src/client/index.js --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=talebearer.min.js --inject:./src/client/mithril.shim.js --jsx-factory=m --jsx-fragment=\"\\\"[\\\"\" --sourcemap=both --servedir=.",
-    "dev:server": "netlify dev",
+    "netlify:dev": "netlify dev",
+    "wrangler:dev": "wrangler dev",
     "migrate:prepare": "drizzle-kit generate:sqlite --schema=src/server/model/*.ts --out=./migrations",
-    "migrate:cloud": "node src/server/migrate.mjs"
+    "migrate:netlify": "node src/server/migrate.mjs",
+    "migrate:cloudflare": "wrangler d1 migrations apply talebearer --local"
   },
   "author": "",
   "license": "ISC",

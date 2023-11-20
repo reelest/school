@@ -44,7 +44,9 @@ async function updateVersions(k: IDirectory | IFile) {
   if ("content" in k) {
     k.version = await digest(k.content);
   } else {
-    k.version = await digest(k.children.map((e) => e.version).join("\n"));
+    k.version = (
+      await digest(k.children.map((e) => e.version + ":" + e.name).join("\n"))
+    ).slice(0, k.parent ? 5 : 80);
   }
   if (k.parent) {
     await updateVersions(k.parent);
@@ -101,6 +103,7 @@ function addDirectoryNode(parent: IDirectory, name: string) {
       version: "",
     };
     parent.children.push(m);
+    parent.children.sort((a, b) => a.name.localeCompare(b.name));
     return m as IDirectory;
   }
 }

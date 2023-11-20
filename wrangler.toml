@@ -1,0 +1,8 @@
+name = "school-zero2hero"
+main = "src/server/cloudflare.ts"
+compatibility_date = "2023-11-17"
+
+[[d1_databases]]
+binding = "D1"
+database_name = "talebearer"
+database_id = "3d04bebc-39ff-497a-bdbf-1c47ca8ce1d6"

@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { fetcher } from "itty-fetcher";
 const api = fetcher({
-  base: "http://localhost:8888/api",
+  base: "http://localhost:8787/api",
 });
 
 describe("Worker", () => {

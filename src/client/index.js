@@ -16,5 +16,5 @@ if (process.env.NODE_ENV !== "production")
   console.log(fs);
   await sync("bucket", fs);
 })().then(async () => {
-  console.log("Synced");
+  alert("Synced");
 });

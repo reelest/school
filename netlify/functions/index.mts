@@ -1,5 +1,5 @@
 import { Context, Config } from "@netlify/functions";
-import handleRequest from "../../src/server/router";
+import handleRequest from "../../src/server/app";
 import { IRequest } from "itty-router";
 import "dotenv/config";
 

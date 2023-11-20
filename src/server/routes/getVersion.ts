@@ -2,6 +2,7 @@ import { IRequest, status } from "itty-router";
 import { getDB, lateInit } from "../middleware/db";
 import { buckets } from "../model/buckets";
 import { desc, eq, sql } from "drizzle-orm";
+import { getVersion } from "../services/getVersion";
 
 let stmt = lateInit(() =>
   getDB()
@@ -12,6 +13,6 @@ let stmt = lateInit(() =>
     .limit(1)
     .prepare()
 );
-export function getVersion(req: IRequest) {
-  return stmt().all({ bucket: "" + req.params.bundleId });
+export default function _getVersion(req: IRequest) {
+  return getVersion(req.params.bundleId);
 }
