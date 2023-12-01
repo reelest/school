@@ -1,6 +1,6 @@
 name = "school-zero2hero"
 main = "src/server/cloudflare.ts"
-compatibility_date = "2023-11-17"
+compatibility_date = "2023-10-25"
 
 [[d1_databases]]
 binding = "D1"

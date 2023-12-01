@@ -22,6 +22,7 @@ export default async function uploadBundle({
   content: SerializedRecord;
 }) {
   await getDB().transaction(async (tx) => {
+    console.log({ bucket, version });
     await tx.insert(buckets).values({
       bucket: bucket,
       sha: version,

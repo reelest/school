@@ -11,7 +11,7 @@
     "wrangler:dev": "wrangler dev",
     "migrate:prepare": "drizzle-kit generate:sqlite --schema=src/server/model/*.ts --out=./migrations",
     "migrate:netlify": "node src/server/migrate.mjs",
-    "migrate:cloudflare": "wrangler d1 migrations apply talebearer --local"
+    "migrate:cloudflare": "wrangler d1 migrations apply talebearer"
   },
   "author": "",
   "license": "ISC",

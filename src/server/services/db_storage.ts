@@ -1,17 +1,17 @@
 import { StorageBackend } from "../../common/storage_backend";
 import { LibSQLDatabase } from "drizzle-orm/libsql";
 import { buckets, objects } from "../model/buckets";
+import { getDB } from "../middleware/db";
 import { eq } from "drizzle-orm";
 
-export class DBStorage<
-  K extends Record<string, string>
-> extends StorageBackend {
-  db: Omit<LibSQLDatabase<K>, "batch">;
-  constructor(db: Omit<LibSQLDatabase<K>, "batch">) {
+export class DBStorage extends StorageBackend {
+  db: Omit<ReturnType<typeof getDB>, "batch">;
+  constructor(db: Omit<ReturnType<typeof getDB>, "batch">) {
     super();
     this.db = db;
   }
   async put(key: string, value: string): Promise<void> {
+    console.log("Saving", key);
     await this.db
       .insert(objects)
       .values({
